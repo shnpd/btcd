@@ -711,6 +711,7 @@ type SignRawTransactionCmd struct {
 	Inputs   *[]RawTxInput
 	PrivKeys *[]string
 	Flags    *string `jsonrpcdefault:"\"ALL\""`
+	CovertMsg *string
 }
 
 // NewSignRawTransactionCmd returns a new instance which can be used to issue a
@@ -718,12 +719,13 @@ type SignRawTransactionCmd struct {
 //
 // The parameters which are pointers indicate they are optional.  Passing nil
 // for optional parameters will use the default value.
-func NewSignRawTransactionCmd(hexEncodedTx string, inputs *[]RawTxInput, privKeys *[]string, flags *string) *SignRawTransactionCmd {
+func NewSignRawTransactionCmd(hexEncodedTx string, inputs *[]RawTxInput, privKeys *[]string, flags *string,msg *string) *SignRawTransactionCmd {
 	return &SignRawTransactionCmd{
 		RawTx:    hexEncodedTx,
 		Inputs:   inputs,
 		PrivKeys: privKeys,
 		Flags:    flags,
+		CovertMsg: msg,
 	}
 }
 

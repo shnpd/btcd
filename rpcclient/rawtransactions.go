@@ -424,7 +424,7 @@ func (r FutureSignRawTransactionResult) Receive() (*wire.MsgTx, bool, error) {
 // the returned instance.
 //
 // See SignRawTransaction for the blocking version and more details.
-func (c *Client) SignRawTransactionAsync(tx *wire.MsgTx) FutureSignRawTransactionResult {
+func (c *Client) SignRawTransactionAsync(tx *wire.MsgTx,msg *string) FutureSignRawTransactionResult {
 	txHex := ""
 	if tx != nil {
 		// Serialize the transaction and convert to hex string.
@@ -435,7 +435,7 @@ func (c *Client) SignRawTransactionAsync(tx *wire.MsgTx) FutureSignRawTransactio
 		txHex = hex.EncodeToString(buf.Bytes())
 	}
 
-	cmd := btcjson.NewSignRawTransactionCmd(txHex, nil, nil, nil)
+	cmd := btcjson.NewSignRawTransactionCmd(txHex, nil, nil, nil,msg)
 	return c.SendCmd(cmd)
 }
 
@@ -446,8 +446,8 @@ func (c *Client) SignRawTransactionAsync(tx *wire.MsgTx) FutureSignRawTransactio
 // private keys for the passed transaction which needs to be signed and uses the
 // default signature hash type.  Use one of the SignRawTransaction# variants to
 // specify that information if needed.
-func (c *Client) SignRawTransaction(tx *wire.MsgTx) (*wire.MsgTx, bool, error) {
-	return c.SignRawTransactionAsync(tx).Receive()
+func (c *Client) SignRawTransaction(tx *wire.MsgTx, msg *string) (*wire.MsgTx, bool, error) {
+	return c.SignRawTransactionAsync(tx,msg).Receive()
 }
 
 // SignRawTransaction2Async returns an instance of a type that can be used to
@@ -466,7 +466,7 @@ func (c *Client) SignRawTransaction2Async(tx *wire.MsgTx, inputs []btcjson.RawTx
 		txHex = hex.EncodeToString(buf.Bytes())
 	}
 
-	cmd := btcjson.NewSignRawTransactionCmd(txHex, &inputs, nil, nil)
+	cmd := btcjson.NewSignRawTransactionCmd(txHex, &inputs, nil, nil,nil)
 	return c.SendCmd(cmd)
 }
 
@@ -504,7 +504,7 @@ func (c *Client) SignRawTransaction3Async(tx *wire.MsgTx,
 	}
 
 	cmd := btcjson.NewSignRawTransactionCmd(txHex, &inputs, &privKeysWIF,
-		nil)
+		nil,nil)
 	return c.SendCmd(cmd)
 }
 
@@ -552,7 +552,7 @@ func (c *Client) SignRawTransaction4Async(tx *wire.MsgTx,
 	}
 
 	cmd := btcjson.NewSignRawTransactionCmd(txHex, &inputs, &privKeysWIF,
-		btcjson.String(string(hashType)))
+		btcjson.String(string(hashType)),nil)
 	return c.SendCmd(cmd)
 }
 
